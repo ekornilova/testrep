@@ -9,7 +9,7 @@ after_success:
   - mkdir dist
   - cp -R public/index.html src/js dist
 deploy:
-  provider: testrep
+  provider: burgerkornilova
   skip_cleanup: true
   github_token: $GITHUB_TOKEN
   keep_history: true
