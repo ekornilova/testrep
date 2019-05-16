@@ -6,7 +6,7 @@ after_success:
   - cp -R public/index.html src/js dist
 
 deploy:
-  provider: burger
+  provider: testrep
   skip_cleanup: true
   github_token: $GITHUB_TOKEN
   keep_history: true
