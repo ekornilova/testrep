@@ -8,3 +8,9 @@ export {
     purcaseInit,
     fetchOrders
 } from './order'
+export {
+    auth,
+    logOut,
+    setAuthRedirectPath,
+    authCheckState
+} from './auth'
