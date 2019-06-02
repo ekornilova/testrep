@@ -1,12 +1,10 @@
 import React, { Component } from 'react'
-import Aux from '../../../hoc/AuxHoc/AuxHoc'
 import classes from './BurgerIngredient.css'
 import PropTypes from 'prop-types'
 
 class BurgerIngredient extends Component{
     render(){
         let ingredient = null
-        let y = 0
         switch (this.props.type){
             case ('bread-bottom'):
                 ingredient = <div className={classes.BreadBottom}></div>
