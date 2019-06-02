@@ -8,8 +8,8 @@ import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary'
 import axios from '../../axios'
 import Spinner from '../../components/UI/Spinner/Spinner'
 import withErrorHandler from '../../hoc/WithErrorHandler/WithErrorHandler'
-import * as actionTypes from '../../store/actions'
-
+import * as actionTypes from '../../store/actions/actionTypes'
+import * as burgerBuilderActions from '../../store/actions/index'
 
  class BurgerBuilder extends Component {
     //  constructor(props){
@@ -27,17 +27,12 @@ import * as actionTypes from '../../store/actions'
         //totalPrice: 4,
         //purchasable: false,
         purchasing: false,
-        loading: false,
-        error: false
+        // loading: false,
+        // error: false
     }
      
     componentDidMount(){
-        // axios.get('https://react-kornilova-burger.firebaseio.com/ingredients.json').then(response => {
-        //     this.setState({
-        //         ingredients: response.data
-        //     })
-        // })
-        // .catch(errorr=>this.setState({ error: true }))
+        this.props.onIngsInit()
     }
 
     updatePurchaseState(ingredients){
@@ -71,6 +66,7 @@ import * as actionTypes from '../../store/actions'
         // }
         // queryParams.push('price='+this.props.ttlPrice)
         // const queryString = queryParams.join('&')
+        this.props.onInitPurchase()
         this.props.history.push({
             pathname: '/checkout',
            // search: '?' + queryString
@@ -124,7 +120,7 @@ import * as actionTypes from '../../store/actions'
          }
          
          // {salad: true, meat: false, ...}
-         let burger = this.state.error ? <p>Ingredients can't be loaded!</p> : <Spinner />
+         let burger = this.props.error ? <p>Ingredients can't be loaded!</p> : <Spinner />
          let orderSummary = null
          if (this.props.ings){
             burger = <Aux>
@@ -144,9 +140,9 @@ import * as actionTypes from '../../store/actions'
             />
          }
              
-         if (this.state.loading){
-            orderSummary = <Spinner />
-        }
+        //  if (this.state.loading){
+        //     orderSummary = <Spinner />
+        // }
          return (
              <Aux>
                  <Modal show={this.state.purchasing} modalClosed={this.purchaseCancelHandler}> 
@@ -160,14 +156,17 @@ import * as actionTypes from '../../store/actions'
  } 
  const mapStateToProps = state => {
      return {
-         ings: state.ingredients,
-         ttlPrice: state.totalPrice
+         ings: state.burgerBuilder.ingredients,
+         ttlPrice: state.burgerBuilder.totalPrice,
+         error: state.burgerBuilder.error,
      }
  }
  const mapDispatchToProps = dispatch =>{
      return {
-         onIngsAdd: (ingName) => dispatch({type: actionTypes.ADD_INGREDIENT, ingredientName: ingName}),
-         onIngsDel: (ingName) => dispatch({type: actionTypes.DELETE_INGREDIENT, ingredientName: ingName})
+         onIngsAdd: (ingName) => dispatch(burgerBuilderActions.addIngrt(ingName)),
+         onIngsDel: (ingName) => dispatch(burgerBuilderActions.delIngrt(ingName)),
+         onIngsInit: () => dispatch(burgerBuilderActions.initIngrts()),
+         onInitPurchase: () => dispatch(burgerBuilderActions.purcaseInit())
      }
  }
 

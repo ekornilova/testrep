@@ -5,6 +5,7 @@ import classes from './ContactData.css'
 import axios from '../../../axios'
 import Spinner from '../../../components/UI/Spinner/Spinner'
 import Input from '../../../components/UI/Input/Input'
+import * as orderActions from '../../../store/actions/index'
 
 class ContactData extends Component {
     state= {
@@ -95,7 +96,7 @@ class ContactData extends Component {
                     valid:true
                 },
         },
-        loading: false,
+        //loading: false,
         formIsValid: false
     }
 
@@ -119,7 +120,7 @@ class ContactData extends Component {
     orderHandler = (event) => {
         event.preventDefault()
         console.log('orderHandler',this.props.ingredients)
-        this.setState({ loading: true })
+        //this.setState({ loading: true })
         const formData ={}
         for (let el in this.state.orderForm) {
             formData[el] = this.state.orderForm[el].value
@@ -130,19 +131,20 @@ class ContactData extends Component {
             orderData:formData
 
         }
-        axios.post('/orders.json',order)
-        .then(response => {
-            this.setState({ loading: false, 
-            purchasing: false
-            })
-            this.props.history.push('/')
-            console.log('response',response)
-        }) 
-        .catch(error => {
-            this.setState({ loading: false, 
-                purchasing: false })
-            console.log('error',error)
-        })
+        this.props.onOrderBurger(order)
+        // axios.post('/orders.json',order)
+        // .then(response => {
+        //     this.setState({ loading: false, 
+        //     purchasing: false
+        //     })
+        //     this.props.history.push('/')
+        //     console.log('response',response)
+        // }) 
+        // .catch(error => {
+        //     this.setState({ loading: false, 
+        //         purchasing: false })
+        //     console.log('error',error)
+        // })
     }
     inputChangeHandler = (event, idEl) =>  {
         console.log(event.target.value)
@@ -184,7 +186,7 @@ class ContactData extends Component {
             
             <Button btnType='Success' disabled={!this.state.formIsValid} clicked = {this.orderHandler}>ORDER</Button>
         </form>)
-        if (this.state.loading)
+        if (this.props.loading)
             form = <Spinner />
        return (
            <div className={classes.ContactData}>
@@ -196,8 +198,14 @@ class ContactData extends Component {
 }
 const mapStateToProps = state => {
     return {
-        ingredients: state.ingredients,
-        price: state.totalPrice
+        ingredients: state.burgerBuilder.ingredients,
+        price: state.burgerBuilder.totalPrice,
+        loading: state.order.loading
     }
 }
-export default connect(mapStateToProps)(ContactData)
+const mapDispatchToProps= dispatch => {
+    return {
+        onOrderBurger: (orderData) => dispatch(orderActions.purcaseBurger(orderData))
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(ContactData)
