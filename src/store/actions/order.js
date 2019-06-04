@@ -25,7 +25,6 @@ export const purcaseBurger = (orderData, token) => {
 
         axios.post('/orders.json?auth=' + token,orderData)
         .then(response => {
-            console.log(response.data)
             dispatch(purcaseBurgerSuccess(response.data.name, orderData))
             // this.setState({ loading: false, 
             // purchasing: false
